@@ -3,7 +3,7 @@ const { terser } = require('rollup-plugin-terser');
 const replace = require('@rollup/plugin-replace');
 const strip = require('@rollup/plugin-strip');
 const nodeResolve = require('rollup-plugin-node-resolve');
-const commonjs = require('rollup-plugin-commonjs');
+const commonjs = require('@rollup/plugin-commonjs');
 
 const { version: __VERSION__ } = require('./package.json');
 const path = require('path');
