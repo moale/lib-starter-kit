@@ -4,10 +4,9 @@ const replace = require('@rollup/plugin-replace');
 const strip = require('@rollup/plugin-strip');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
+const compiler = require('@ampproject/rollup-plugin-closure-compiler');
 
-const { version: __VERSION__ } = require('./package.json');
 const path = require('path');
-
 const FORMATS = ['esm', 'cjs'];
 
 const env = process.env.NODE_ENV || 'development';
@@ -27,6 +26,8 @@ function createConfig({
   min,
   env = 'development',
   isEsm = output.format !== 'cjs',
+  sourceMaps = false,
+  compilerSettings = {},
 }) {
   return {
     input,
@@ -36,16 +37,14 @@ function createConfig({
       babel({
         exclude: /node_modules/,
         runtimeHelpers: true,
-        // sourceMaps: true,
+        sourceMaps,
         plugins: [['@babel/transform-runtime', { useESModules: isEsm }]],
       }),
-      env === 'production' &&
-        strip({
-          /* sourceMaps: true, */
-        }),
+      env === 'production' && strip({ sourceMap: sourceMaps }),
+      replace({ 'process.env.NODE_ENV': JSON.stringify(env), __DEV__ }),
       nodeResolve(),
       commonjs(),
-      replace({ 'process.env.NODE_ENV': JSON.stringify(env), __VERSION__, __DEV__ }),
+      compiler(compilerSettings),
       min && terser(),
     ].filter(Boolean),
   };
