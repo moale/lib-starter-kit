@@ -6,19 +6,19 @@ const nodeResolve = require('rollup-plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
 const compiler = require('@ampproject/rollup-plugin-closure-compiler');
 
-const path = require('path');
+// const path = require('path');
 const FORMATS = ['esm', 'cjs'];
 
 const env = process.env.NODE_ENV || 'development';
 const __DEV__ = process.env.NODE_ENV === 'development';
 
-function isBareModuleId(id) {
+/* function isBareModuleId(id) {
   return (
     !id.startsWith('.') &&
     (!id.includes(path.join(process.cwd(), 'modules')) ||
       !id.includes(path.join(process.cwd(), 'packages')))
   );
-}
+} */
 
 function createConfig({
   input,
@@ -32,7 +32,7 @@ function createConfig({
   return {
     input,
     output,
-    external: isBareModuleId,
+    //external: isBareModuleId,
     plugins: [
       babel({
         exclude: /node_modules/,
